@@ -1,3 +1,6 @@
+/**
+ * 邻接矩阵深度和广度遍历
+ */
 #include "stdio.h"
 #include "stdlib.h"
 #include "io.h"

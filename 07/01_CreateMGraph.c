@@ -1,3 +1,7 @@
+/**
+ * 邻接矩阵创建
+ */
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "io.h"

@@ -1,3 +1,6 @@
+/**
+ * 最小生成树
+ */
 #include "stdio.h"
 #include "stdlib.h"
 #include "io.h"
