@@ -26,6 +26,7 @@ typedef struct Node {
     ElemType data;
     struct Node *next;
 } Node;
+
 typedef struct Node *LinkList; /* 定义LinkList */
 
 /* 初始化顺序线性表 */
