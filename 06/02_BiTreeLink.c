@@ -1,3 +1,6 @@
+/**
+ * 二叉树链式结构实现
+ */
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"

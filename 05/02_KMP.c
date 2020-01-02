@@ -1,3 +1,7 @@
+/**
+ * 模式匹配
+ */
+
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"

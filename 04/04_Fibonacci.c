@@ -1,3 +1,6 @@
+/**
+ * 斐波那契函数
+ */
 #include "stdio.h"
 
 int Fbi(int i)  /* 斐波那契的递归函数 */

@@ -1,3 +1,6 @@
+/**
+ * 二叉树顺序结构实现
+ */
 #include "stdio.h"
 #include "stdlib.h"
 #include "io.h"

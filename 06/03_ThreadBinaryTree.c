@@ -1,3 +1,7 @@
+/**
+ * 线索二叉树
+ */
+
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
