@@ -13,22 +13,22 @@
 #define MAXVEX 20
 #define INFINITY 65535
 
-typedef int Status;    /* Status�Ǻ���������,��ֵ�Ǻ������״̬���룬��OK�� */
+typedef int Status;    /* Status是函数的类型,其值是函数结果状态代码，如OK等 */
 
 typedef struct {
     int arc[MAXVEX][MAXVEX];
     int numVertexes, numEdges;
 } MGraph;
 
-void CreateMGraph(MGraph *G)/* ����ͼ */
+void CreateMGraph(MGraph *G)/* 构件图 */
 {
     int i, j;
 
-    /* printf("����������Ͷ�����:"); */
+    /* printf("请输入边数和顶点数:"); */
     G->numEdges = 15;
     G->numVertexes = 9;
 
-    for (i = 0; i < G->numVertexes; i++)/* ��ʼ��ͼ */
+    for (i = 0; i < G->numVertexes; i++)/* 初始化图 */
     {
         for (j = 0; j < G->numVertexes; j++) {
             if (i == j)
@@ -62,40 +62,40 @@ void CreateMGraph(MGraph *G)/* ����ͼ */
 
 }
 
-/* Prim�㷨������С������  */
+/* Prim算法生成最小生成树  */
 void MiniSpanTree_Prim(MGraph G) {
     int min, i, j, k;
-    int adjvex[MAXVEX];        /* ������ض����±� */
-    int lowcost[MAXVEX];    /* ������ض����ߵ�Ȩֵ */
-    lowcost[0] = 0;/* ��ʼ����һ��ȨֵΪ0����v0���������� */
-    /* lowcost��ֵΪ0����������Ǵ��±�Ķ����Ѿ����������� */
-    adjvex[0] = 0;            /* ��ʼ����һ�������±�Ϊ0 */
-    for (i = 1; i < G.numVertexes; i++)    /* ѭ�����±�Ϊ0���ȫ������ */
+    int adjvex[MAXVEX];        /* 保存相关顶点下标 */
+    int lowcost[MAXVEX];    /* 保存相关顶点间边的权值 */
+    lowcost[0] = 0;/* 初始化第一个权值为0，即v0加入生成树 */
+    /* lowcost的值为0，在这里就是此下标的顶点已经加入生成树 */
+    adjvex[0] = 0;            /* 初始化第一个顶点下标为0 */
+    for (i = 1; i < G.numVertexes; i++)    /* 循环除下标为0外的全部顶点 */
     {
-        lowcost[i] = G.arc[0][i];    /* ��v0������֮�бߵ�Ȩֵ�������� */
-        adjvex[i] = 0;                    /* ��ʼ����Ϊv0���±� */
+        lowcost[i] = G.arc[0][i];    /* 将v0顶点与之有边的权值存入数组 */
+        adjvex[i] = 0;                    /* 初始化都为v0的下标 */
     }
     for (i = 1; i < G.numVertexes; i++) {
-        min = INFINITY;    /* ��ʼ����СȨֵΪ�ޣ� */
-        /* ͨ������Ϊ�����ܵĴ�������32767��65535�� */
+        min = INFINITY;    /* 初始化最小权值为∞， */
+        /* 通常设置为不可能的大数字如32767、65535等 */
         j = 1;
         k = 0;
-        while (j < G.numVertexes)    /* ѭ��ȫ������ */
+        while (j < G.numVertexes)    /* 循环全部顶点 */
         {
-            if (lowcost[j] != 0 && lowcost[j] < min)/* ���Ȩֵ��Ϊ0��ȨֵС��min */
+            if (lowcost[j] != 0 && lowcost[j] < min)/* 如果权值不为0且权值小于min */
             {
-                min = lowcost[j];    /* ���õ�ǰȨֵ��Ϊ��Сֵ */
-                k = j;            /* ����ǰ��Сֵ���±����k */
+                min = lowcost[j];    /* 则让当前权值成为最小值 */
+                k = j;            /* 将当前最小值的下标存入k */
             }
             j++;
         }
-        printf("(%d, %d)\n", adjvex[k], k);/* ��ӡ��ǰ�������Ȩֵ��С�ı� */
-        lowcost[k] = 0;/* ����ǰ�����Ȩֵ����Ϊ0,��ʾ�˶����Ѿ�������� */
-        for (j = 1; j < G.numVertexes; j++)    /* ѭ�����ж��� */
+        printf("(%d, %d)\n", adjvex[k], k);/* 打印当前顶点边中权值最小的边 */
+        lowcost[k] = 0;/* 将当前顶点的权值设置为0,表示此顶点已经完成任务 */
+        for (j = 1; j < G.numVertexes; j++)    /* 循环所有顶点 */
         {
-            if (lowcost[j] != 0 && G.arc[k][j] < lowcost[j]) {/* ����±�Ϊk�������ȨֵС�ڴ�ǰ��Щ����δ������������Ȩֵ */
-                lowcost[j] = G.arc[k][j];/* ����С��Ȩֵ����lowcost��Ӧλ�� */
-                adjvex[j] = k;                /* ���±�Ϊk�Ķ������adjvex */
+            if (lowcost[j] != 0 && G.arc[k][j] < lowcost[j]) {/* 如果下标为k顶点各边权值小于此前这些顶点未被加入生成树权值 */
+                lowcost[j] = G.arc[k][j];/* 将较小的权值存入lowcost相应位置 */
+                adjvex[j] = k;                /* 将下标为k的顶点存入adjvex */
             }
         }
     }

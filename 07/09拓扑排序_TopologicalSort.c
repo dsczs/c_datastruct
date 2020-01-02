@@ -12,52 +12,52 @@
 #define MAXVEX 14
 #define INFINITY 65535
 
-typedef int Status;    /* Status�Ǻ���������,��ֵ�Ǻ������״̬���룬��OK�� */
+typedef int Status;    /* Status是函数的类型,其值是函数结果状态代码，如OK等 */
 
-/* �ڽӾ���ṹ */
+/* 邻接矩阵结构 */
 typedef struct {
     int vexs[MAXVEX];
     int arc[MAXVEX][MAXVEX];
     int numVertexes, numEdges;
 } MGraph;
 
-/* �ڽӱ�ṹ****************** */
-typedef struct EdgeNode /* �߱���  */
+/* 邻接表结构****************** */
+typedef struct EdgeNode /* 边表结点  */
 {
-    int adjvex;    /* �ڽӵ��򣬴洢�ö����Ӧ���±� */
-    int weight;        /* ���ڴ洢Ȩֵ�����ڷ���ͼ���Բ���Ҫ */
-    struct EdgeNode *next; /* ����ָ����һ���ڽӵ� */
+    int adjvex;    /* 邻接点域，存储该顶点对应的下标 */
+    int weight;        /* 用于存储权值，对于非网图可以不需要 */
+    struct EdgeNode *next; /* 链域，指向下一个邻接点 */
 } EdgeNode;
 
-typedef struct VertexNode /* ������� */
+typedef struct VertexNode /* 顶点表结点 */
 {
-    int in;    /* ������� */
-    int data; /* �����򣬴洢������Ϣ */
-    EdgeNode *firstedge;/* �߱�ͷָ�� */
+    int in;    /* 顶点入度 */
+    int data; /* 顶点域，存储顶点信息 */
+    EdgeNode *firstedge;/* 边表头指针 */
 } VertexNode, AdjList[MAXVEX];
 
 typedef struct {
     AdjList adjList;
-    int numVertexes, numEdges; /* ͼ�е�ǰ�������ͱ��� */
+    int numVertexes, numEdges; /* 图中当前顶点数和边数 */
 } graphAdjList, *GraphAdjList;
 
 /* **************************** */
 
 
-void CreateMGraph(MGraph *G)/* ����ͼ */
+void CreateMGraph(MGraph *G)/* 构件图 */
 {
     int i, j;
 
-    /* printf("����������Ͷ�����:"); */
+    /* printf("请输入边数和顶点数:"); */
     G->numEdges = MAXEDGE;
     G->numVertexes = MAXVEX;
 
-    for (i = 0; i < G->numVertexes; i++)/* ��ʼ��ͼ */
+    for (i = 0; i < G->numVertexes; i++)/* 初始化图 */
     {
         G->vexs[i] = i;
     }
 
-    for (i = 0; i < G->numVertexes; i++)/* ��ʼ��ͼ */
+    for (i = 0; i < G->numVertexes; i++)/* 初始化图 */
     {
         for (j = 0; j < G->numVertexes; j++) {
             G->arc[i][j] = 0;
@@ -87,7 +87,7 @@ void CreateMGraph(MGraph *G)/* ����ͼ */
 
 }
 
-/* �����ڽӾ��󹹽��ڽӱ� */
+/* 利用邻接矩阵构建邻接表 */
 void CreateALGraph(MGraph G, GraphAdjList *GL) {
     int i, j;
     EdgeNode *e;
@@ -96,21 +96,21 @@ void CreateALGraph(MGraph G, GraphAdjList *GL) {
 
     (*GL)->numVertexes = G.numVertexes;
     (*GL)->numEdges = G.numEdges;
-    for (i = 0; i < G.numVertexes; i++) /* ���붥����Ϣ����������� */
+    for (i = 0; i < G.numVertexes; i++) /* 读入顶点信息，建立顶点表 */
     {
         (*GL)->adjList[i].in = 0;
         (*GL)->adjList[i].data = G.vexs[i];
-        (*GL)->adjList[i].firstedge = NULL;    /* ���߱���Ϊ�ձ� */
+        (*GL)->adjList[i].firstedge = NULL;    /* 将边表置为空表 */
     }
 
-    for (i = 0; i < G.numVertexes; i++) /* �����߱� */
+    for (i = 0; i < G.numVertexes; i++) /* 建立边表 */
     {
         for (j = 0; j < G.numVertexes; j++) {
             if (G.arc[i][j] == 1) {
                 e = (EdgeNode *) malloc(sizeof(EdgeNode));
-                e->adjvex = j;                    /* �ڽ����Ϊj  */
-                e->next = (*GL)->adjList[i].firstedge;    /* ����ǰ�����ϵ�ָ��Ľ��ָ�븳ֵ��e */
-                (*GL)->adjList[i].firstedge = e;        /* ����ǰ�����ָ��ָ��e  */
+                e->adjvex = j;                    /* 邻接序号为j  */
+                e->next = (*GL)->adjList[i].firstedge;    /* 将当前顶点上的指向的结点指针赋值给e */
+                (*GL)->adjList[i].firstedge = e;        /* 将当前顶点的指针指向e  */
                 (*GL)->adjList[j].in++;
 
             }
@@ -120,25 +120,25 @@ void CreateALGraph(MGraph G, GraphAdjList *GL) {
 }
 
 
-/* ����������GL�޻�·������������������в�����1�����л�·����0�� */
+/* 拓扑排序，若GL无回路，则输出拓扑排序序列并返回1，若有回路返回0。 */
 Status TopologicalSort(GraphAdjList GL) {
     EdgeNode *e;
     int i, k, gettop;
-    int top = 0;  /* ����ջָ���±�  */
-    int count = 0;/* ����ͳ���������ĸ���  */
-    int *stack;    /* ��ջ�����Ϊ0�Ķ�����ջ  */
+    int top = 0;  /* 用于栈指针下标  */
+    int count = 0;/* 用于统计输出顶点的个数  */
+    int *stack;    /* 建栈将入度为0的顶点入栈  */
     stack = (int *) malloc(GL->numVertexes * sizeof(int));
 
     for (i = 0; i < GL->numVertexes; i++)
-        if (0 == GL->adjList[i].in) /* �����Ϊ0�Ķ�����ջ */
+        if (0 == GL->adjList[i].in) /* 将入度为0的顶点入栈 */
             stack[++top] = i;
     while (top != 0) {
         gettop = stack[top--];
         printf("%d -> ", GL->adjList[gettop].data);
-        count++;        /* ���i�Ŷ��㣬������ */
+        count++;        /* 输出i号顶点，并计数 */
         for (e = GL->adjList[gettop].firstedge; e; e = e->next) {
             k = e->adjvex;
-            if (!(--GL->adjList[k].in))  /* ��i�Ŷ�����ڽӵ����ȼ�1�������1��Ϊ0������ջ */
+            if (!(--GL->adjList[k].in))  /* 将i号顶点的邻接点的入度减1，如果减1后为0，则入栈 */
                 stack[++top] = k;
         }
     }

@@ -1,3 +1,6 @@
+/**
+ * 平衡二叉树
+ */
 #include "stdio.h"
 #include "stdlib.h"
 #include "io.h"
