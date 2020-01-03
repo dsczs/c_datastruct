@@ -16,16 +16,15 @@
 typedef int Status;          /* Status是函数的类型,其值是函数结果状态代码，如OK等 */
 typedef int ElemType;        /* ElemType类型根据实际情况而定，这里假设为int */
 
+typedef struct {
+    ElemType data[MAXSIZE];        /* 数组，存储数据元素 */
+    int length;                                /* 线性表当前长度 */
+} SqList;
 
 Status visit(ElemType c) {
     printf("%d ", c);
     return OK;
 }
-
-typedef struct {
-    ElemType data[MAXSIZE];        /* 数组，存储数据元素 */
-    int length;                                /* 线性表当前长度 */
-} SqList;
 
 /* 初始化顺序线性表 */
 Status InitList(SqList *L) {
